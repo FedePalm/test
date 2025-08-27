@@ -26,7 +26,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              labels: ['component: infra']
+              labels: ['infrastructure']
             });
 
       # Step 2: Add the issue to the project board.
