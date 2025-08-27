@@ -1,5 +1,5 @@
-# This workflow automatically adds new issues to the organization's main project board.
-name: Add New Issue to Project
+# This workflow automatically labels new issues and adds them to the project board.
+name: Add and Label New Issue
 
 # This action runs every time a new issue is opened in this repository.
 on:
@@ -8,28 +8,34 @@ on:
 
 # The single job that will be executed.
 jobs:
-  add-to-project:
-    name: Add issue to project
+  process-new-issue:
+    name: Process New Issue
     runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+
     steps:
-      - name: Add labels to issue
+      # Step 1: Add the default component label.
+      # This step now has the permission it needs to work.
+      - name: Add 'infrastructure' label
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             github.rest.issues.addLabels({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              labels: ['infrastructure']
+              labels: ['component: infra']
             });
 
+      # Step 2: Add the issue to the project board.
+      # This step uses your separate, more powerful PAT.
       - name: Add to project
         uses: actions/add-to-project@v1.0.1
         with:
-          # The URL of your project board. Replace with your actual URL.
+          # Your Project URL
           project-url: "https://github.com/orgs/PalmariumAI/projects/2"
           
-          # This will now correctly use the REPOSITORY secret you just created.
-          github-token: ${{ secrets.ADD_TO_PROJECT_PAT}}
-      
+          # Your Fine-grained PAT stored as a repository secret
+          github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
