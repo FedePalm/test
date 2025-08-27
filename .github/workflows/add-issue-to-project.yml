@@ -1,0 +1,22 @@
+# This workflow automatically adds new issues to the organization's main project board.
+name: Add New Issue to Project
+
+# This action runs every time a new issue is opened in this repository.
+on:
+  issues:
+    types: [opened]
+
+# The single job that will be executed.
+jobs:
+  add-to-project:
+    name: Add issue to project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add to project
+        uses: actions/add-to-project@v1.0.1
+        with:
+          # The URL of your project board. Replace with your actual URL.
+          project-url: "https://github.com/orgs/PalmariumAI/projects/2"
+          
+          # This will now correctly use the REPOSITORY secret you just created.
+          github-token: ${{ secrets.ADD_TO_PROJECT_PAT}}
